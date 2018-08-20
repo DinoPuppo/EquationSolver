@@ -12,8 +12,6 @@ import tkinter as tk
 def cubic_root(x):
     return pow(x, 1/3) if x >= 0 else -pow(-x, 1/3)
 
-# h, c, d, e, f, s5, Z = 1e-7, 0, 0, 0, 0, 0, [1e-7]
-
 
 class Solver:
 
