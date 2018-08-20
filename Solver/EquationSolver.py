@@ -84,31 +84,31 @@ class Solver:
         self.e += self.d * self.s5
 
     def calculate_solutions(self):
-        self.C = 3 * self.b * self.b - 8 * self.a * self.c
-        self.D = 2 * self.b * self.b * self.b - 8 * self.a * self.b * self.c + 16 * self.a * self.a * self.d
-        self.E = -3 * self.b * self.b * self.b * self.b + 16 * self.a * self.b * self.b * self.c - \
-                 64 * self.a * self.a * self.b * self.d + 256 * self.a * self.a * self.a * self.e
-        self.X = self.C * self.C + 3 * self.E
-        self.Y = -self.C * self.C * self.C + 9 * self.C * self.E + 27 * self.D * self.D
+        self.C = 3 * self.b ** 2 - 8 * self.a * self.c
+        self.D = 2 * self.b ** 3 - 8 * self.a * self.b * self.c + 16 * self.a * self.a * self.d
+        self.E = -3 * self.b ** 4 + 16 * self.a * self.b ** 2 * self.c - 64 * self.a ** 2 * self.b * self.d +\
+                 256 * self.a ** 3 * self.e
+        self.X = self.C ** 2 + 3 * self.E
+        self.Y = -self.C ** 3 + 9 * self.C * self.E + 27 * self.D ** 2
 
         if self.X > 0:
-            self.W += [sqrt((self.C + sqrt(self.X) * cos(acos(self.Y / sqrt(self.X * self.X * self.X)) / 3)) / 3),
-                       sqrt((self.C + sqrt(self.X) * cos(acos(self.Y / sqrt(self.X * self.X * self.X)) / 3 - 2 * pi / 3)) / 3),
-                       sqrt((self.C + sqrt(self.X) * cos(acos(self.Y / sqrt(self.X * self.X * self.X)) / 3 - 4 * pi / 3)) / 3)]
+            self.W += [sqrt((self.C + sqrt(self.X) * cos(acos(self.Y / sqrt(self.X ** 3)) / 3)) / 3),
+                       sqrt((self.C + sqrt(self.X) * cos(acos(self.Y / sqrt(self.X ** 3)) / 3 - 2 * pi / 3)) / 3),
+                       sqrt((self.C + sqrt(self.X) * cos(acos(self.Y / sqrt(self.X ** 3)) / 3 - 4 * pi / 3)) / 3)]
         if self.Y * self.Y >= self.X * self.X * self.X:
             self.W += [
-                sqrt((2 * self.C + cubic_root(self.Y + msqrt(self.Y * self.Y - self.X * self.X * self.X)) +
-                      cubic_root(self.Y - msqrt(self.Y * self.Y - self.X * self.X * self.X))) / 6)]
+                sqrt((2 * self.C + cubic_root(self.Y + msqrt(self.Y ** 2 - self.X ** 3)) +
+                      cubic_root(self.Y - msqrt(self.Y ** 2 - self.X ** 3))) / 6)]
         self.W = sorted(self.W, key=abs)
         self.Z = self.W[-1]
 
     def print_solutions(self):
         print('\nSolutions:\n')
         self.solution = sorted(
-            [(-self.b - self.Z - sqrt(-self.Z * self.Z + self.C + self.D / self.Z)) / self.a / 4,
-             (-self.b - self.Z + sqrt(-self.Z * self.Z + self.C + self.D / self.Z)) / self.a / 4,
-             (-self.b + self.Z - sqrt(-self.Z * self.Z + self.C - self.D / self.Z)) / self.a / 4,
-             (-self.b + self.Z + sqrt(-self.Z * self.Z + self.C - self.D / self.Z)) / self.a / 4,
+            [(-self.b - self.Z - sqrt(-self.Z ** 2 + self.C + self.D / self.Z)) / self.a / 4,
+             (-self.b - self.Z + sqrt(-self.Z ** 2 + self.C + self.D / self.Z)) / self.a / 4,
+             (-self.b + self.Z - sqrt(-self.Z ** 2 + self.C - self.D / self.Z)) / self.a / 4,
+             (-self.b + self.Z + sqrt(-self.Z ** 2 + self.C - self.D / self.Z)) / self.a / 4,
              self.s5 + 0j], key=abs)[::-1]
         for i in range(self.degree):
             self.print_solution(self.solution[i])
@@ -125,10 +125,6 @@ if solver.degree > 4:
     solver.find_extra_solution()
 solver.calculate_solutions()
 solver.print_solutions()
-
-
-
-
 
 counter = 0
 
