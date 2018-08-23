@@ -35,9 +35,9 @@ class Solver:
         self.Z = 0
 
     @staticmethod
-    def print_solution(x):
-        print(str(format(x, '.4f')).replace('j', 'i').replace('+0.0000i', '').replace('-0.0000i', '').
-              replace('-0.0000', '0').replace('0.0000', '0').replace('.0000', ''))
+    def format_solution(x):
+        return str(format(x, '.4f')).replace('j', 'i').replace('+0.0000i', '').replace('-0.0000i', '').\
+            replace('-0.0000', '0').replace('0.0000', '0').replace('.0000', '')
 
     @staticmethod
     def welcome_message():
@@ -109,7 +109,7 @@ class Solver:
              (-self.b + self.Z + sqrt(-self.Z ** 2 + self.C - self.D / self.Z)) / self.a / 4,
              self.s5 + 0j], key=abs)[::-1]
         for i in range(self.degree):
-            self.print_solution(self.solution[i])
+            print(self.format_solution(self.solution[i]))
 
 
 # EquationSolver:
@@ -124,26 +124,43 @@ if solver.degree > 4:
 solver.calculate_solutions()
 solver.print_solutions()
 
-counter = 0
-
-
-def counter_label(label):
-    counter = 0
-
-    def count():
-        global counter
-        counter += 1
-        label.config(text=str(counter))
-        label.after(1000, count)
-
-    count()
-
 
 root = tk.Tk()
 root.title("Equation Solver")
-label = tk.Label(root, fg="dark green")
+
+label = tk.Label(root, fg="blue")
 label.pack()
-counter_label(label)
-button = tk.Button(root, text='Submit', width=25, command=root.destroy)
+degrees_string = "";
+for i in range(0, solver.degree+1):
+    degrees_string += chr(ord('a')+i) + " = "
+    number = "";
+    if i == 0:
+        number += str(solver.a)
+    if i == 1:
+        number += str(solver.b)
+    if i == 2:
+        number += str(solver.c)
+    if i == 3:
+        number += str(solver.d)
+    if i == 4:
+        number += str(solver.e)
+    if i == 5:
+        number += str(solver.f)
+    degrees_string += number
+    if i != solver.degree:
+        degrees_string += ", "
+
+label.config(text=degrees_string)
+
+label2 = tk.Label(root, fg="red")
+label2.pack()
+solutions = "Solutions:\n"
+for i in range(0, solver.degree):
+    solutions += solver.format_solution(solver.solution[i])
+    solutions += "\n"
+
+label2.config(text=solutions)
+
+button = tk.Button(root, text="Exit", width=25, command=root.destroy)
 button.pack()
 root.mainloop()
