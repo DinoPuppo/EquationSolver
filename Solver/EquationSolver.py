@@ -18,15 +18,12 @@ class Solver:
     def __init__(self):
         self.degree = 0
         self.solution = 0
-        self.h = 1e-7
+        self.epsilon = 1e-7
         self.a, self.b, self.c, self.d, self.e, self.f = 0, 0, 0, 0, 0, 0
         self.initA, self.initB, self.initC, self.initD, self.initE, self.initF = 0, 0, 0, 0, 0, 0
-        self.s5 = 0
+        self.sol5 = 0
         self.C, self.D, self.E = 0, 0, 0
-        self.W = [1e-7]
-        self.X = 0
-        self.Y = 0
-        self.Z = 0
+        self.W, self.X, self.Y, self.Z = [1e-7], 0, 0, 0
 
     @staticmethod
     def format_solution(x):
@@ -60,20 +57,20 @@ class Solver:
 
     def newton_algorithm(self, x):
         previous_x = x
-        x += -2 * self.h * self.fun(x) / (self.fun(x + self.h) - self.fun(x - self.h))
-        return x if abs(x - previous_x) < self.h else self.newton_algorithm(x)
+        x += -2 * self.epsilon * self.fun(x) / (self.fun(x + self.epsilon) - self.fun(x - self.epsilon))
+        return x if abs(x - previous_x) < self.epsilon else self.newton_algorithm(x)
 
     def find_extra_solution(self):
         while True:
             try:
-                self.s5 = self.newton_algorithm(randint(-1e3, 1e3))
+                self.sol5 = self.newton_algorithm(randint(-1e3, 1e3))
                 break
             except RecursionError:
                 pass
-        self.b += self.a * self.s5
-        self.c += self.b * self.s5
-        self.d += self.c * self.s5
-        self.e += self.d * self.s5
+        self.b += self.a * self.sol5
+        self.c += self.b * self.sol5
+        self.d += self.c * self.sol5
+        self.e += self.d * self.sol5
 
     def calculate_solutions(self):
         self.C = 3 * self.b ** 2 - 8 * self.a * self.c
@@ -101,7 +98,7 @@ class Solver:
              (-self.b - self.Z + sqrt(-self.Z ** 2 + self.C + self.D / self.Z)) / self.a / 4,
              (-self.b + self.Z - sqrt(-self.Z ** 2 + self.C - self.D / self.Z)) / self.a / 4,
              (-self.b + self.Z + sqrt(-self.Z ** 2 + self.C - self.D / self.Z)) / self.a / 4,
-             self.s5 + 0j], key=abs)[::-1]
+             self.sol5 + 0j], key=abs)[::-1]
         for k in range(self.degree):
             print(self.format_solution(self.solution[k]))
 
