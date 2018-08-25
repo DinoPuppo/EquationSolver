@@ -13,6 +13,7 @@ def cubic_root(x):
 # Main class:
 
 
+# This is the main solver class. It creates an object and also the relevant operations for computing the solutions.
 class Solver:
 
     def __init__(self):
@@ -55,11 +56,13 @@ class Solver:
         return 0 if self.degree < 5 else self.a * x ** 5 + self.b * x ** 4 + self.c * x ** 3 + self.d * x ** 2 +\
                                          self.e * x + self.f
 
+    # We use Newton's algorithm if the degree of the equation is greater than 4
     def newton_algorithm(self, x):
         previous_x = x
         x += -2 * self.epsilon * self.fun(x) / (self.fun(x + self.epsilon) - self.fun(x - self.epsilon))
         return x if abs(x - previous_x) < self.epsilon else self.newton_algorithm(x)
 
+    # The initial coefficient values are adjusted if the degree of the equation is greater than 4
     def find_extra_solution(self):
         while True:
             try:
@@ -72,6 +75,7 @@ class Solver:
         self.d += self.c * self.sol5
         self.e += self.d * self.sol5
 
+    # The first four solutions of the equation are calculated through pure algebraic manipulation
     def calculate_solutions(self):
         self.C = 3 * self.b ** 2 - 8 * self.a * self.c
         self.D = 2 * self.b ** 3 - 8 * self.a * self.b * self.c + 16 * self.a * self.a * self.d
@@ -79,7 +83,6 @@ class Solver:
                  256 * self.a ** 3 * self.e
         self.X = self.C ** 2 + 3 * self.E
         self.Y = -self.C ** 3 + 9 * self.C * self.E + 27 * self.D ** 2
-
         if self.X > 0:
             self.W += [sqrt((self.C + sqrt(self.X) * cos(acos(self.Y / sqrt(self.X ** 3)) / 3)) / 3),
                        sqrt((self.C + sqrt(self.X) * cos(acos(self.Y / sqrt(self.X ** 3)) / 3 - 2 * pi / 3)) / 3),
@@ -116,8 +119,9 @@ solver.print_solutions()
 
 # User interface
 
+# We create a root Tkinter object to create the GUI
 root = tk.Tk()
-root.title("Equation Solver")
+root.title("EquationSolver")
 
 degrees_label = tk.Label(root, fg="blue")
 degrees_label.pack()
